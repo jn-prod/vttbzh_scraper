@@ -26,6 +26,9 @@ class NafixSpider(scrapy.Spider):
     def parse_event(self, response):
         def extract_with_css(query):
             return response.css(query).get(default='').strip()
+        def exist(query):
+            isInPage = response.css(query).get() is None
+            return "false" if isInPage else "true"
         yield {
             'name': extract_with_css('#txt_ref_int_nom_2 ::text'),
             'city': extract_with_css('#txt_ref_int_lieu_2 ::text'),
@@ -36,7 +39,8 @@ class NafixSpider(scrapy.Spider):
             'website': extract_with_css('#StyleLien1 ::text'),
             'price': extract_with_css('#txt_ref_int_prix2 ::text'),
             'contact': extract_with_css('#txt_ref_int_contacttxt ::text'),
-            'description': extract_with_css('#txt_ref_int_decription ::text')
+            'description': extract_with_css('#txt_ref_int_decription ::text'),
+            'canceled': exist('#zone_texte_annule')
         }
 
 # class NafixSpider(scrapy.Spider):
